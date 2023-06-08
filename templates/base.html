@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">          
+<head>    
+  <meta charset="UTF-8">
+  <meta name="format-detection" content="telephone=no">
+  <style>
+    body {
+      opacity: 0;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap&_v=20230525123715" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+  {# include style if use old design #}
+  {% block include_style %}
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/old_design/styles.css' %}"> -->
+  {% endblock include_style %}
+
+  <link rel="shortcut icon" href="./logo.ico">
+  <!-- <meta name="robots" content="noindex, nofollow"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% block title %}
+    {% endblock %} 
+  </title>
+</head>
+<body>
+    <div class="wrapper">
+
+      {% include 'includes/header.html' %}
+
+      <main class="page">
+        {% block content %}
+          Контент не подвезли :(
+        {% endblock %}
+      </main>
+
+      <div id="cursor"></div>
+
+      {% include 'includes/footer.html' %}
+
+    </div>
+    <style>
+      .lock body {
+        overflow-x: hidden;
+        touch-action: none;
+        overscroll-behavior: none;
+      }
+      .loading body {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .loaded body {
+        transition: opacity 0.5s ease 0s;
+        opacity: 1;
+        visibility: visible;
+        padding-right: 0;
+      }
+    </style>
+    
+    <div id="fls-preloader">
+        <!-- Документація: https://template.fls.guru/template-docs/modul-preloader.html -->
+        <!-- Стилі для прелоадера -->
+        <style>
+          * {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+          }
+    
+          *,
+          *:before,
+          *:after {
+            box-sizing: border-box;
+          }
+    
+          html {
+            overflow: hidden;
+            touch-action: none;
+            overscroll-behavior: none;
+            padding-right: 15px;
+          }
+    
+          /* Головний блок */
+          .fls-preloader {
+            pointer-events: none;
+            z-index: -1;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+    
+          /* Блок з елементами */
+          .fls-preloader__body {
+            padding: 0.93rem;
+            max-width: 31.25rem;
+            display: flex;
+            flex-direction: column;
+          }
+    
+          /* Блок з лічильником */
+          .fls-preloader__counter {
+            font-size: 10rem;
+            font-family: 'Raleway';
+          }
+    
+          /* Прогресбар */
+          .fls-preloader__line {}
+    
+          /* Лінія прогресбару */
+          .fls-preloader__line span {
+            display: inline-block;
+            transition: width 0.2s ease;
+            height: 0.8rem;
+            background-color: #2881E1;
+          }
+    
+          .touch {
+            padding-right: 0;
+          }
+    
+          @media(max-width: 767.98px) {
+            html {
+              padding-right: 0;
+            }
+    
+            .fls-preloader__counter {
+              font-size: 5rem;
+            }
+          }
+        </style>
+        <!-- Скріпт прелоадера -->
+        <script>
+          function preloader() {
+            const preloaderImages = document.querySelector('[data-preloader]') ? document.querySelectorAll('[data-preloader] img') : document.querySelectorAll('img');
+            const preloaderContainer = document.querySelector('#fls-preloader');
+            if (preloaderImages.length) {
+              const preloaderTemplate = `
+              <div class="fls-preloader">
+                <div class="fls-preloader__body">
+                  <div class="fls-preloader__counter">0%</div>
+                  <div class="fls-preloader__line"><span></span></div>
+                </div>
+              </div>`;
+              document.querySelector('html').insertAdjacentHTML("beforeend", preloaderTemplate);
+    
+              const
+                preloader = document.querySelector('.fls-preloader'),
+                showPecentLoad = document.querySelector('.fls-preloader__counter'),
+                showLineLoad = document.querySelector('.fls-preloader__line span'),
+                htmlDocument = document.documentElement;
+    
+              let imagesLoadedCount = counter = progress = 0;
+    
+              htmlDocument.classList.add('loading');
+              htmlDocument.classList.add('lock');
+    
+              preloaderImages.forEach(preloaderImage => {
+                const imgClone = document.createElement('img');
+                if (imgClone) {
+                  imgClone.onload = imageLoaded;
+                  imgClone.onerror = imageLoaded;
+                  preloaderImage.dataset.src ? imgClone.src = preloaderImage.dataset.src : imgClone.src = preloaderImage.src;
+                }
+              });
+    
+              function setValueProgress(progress) {
+                showPecentLoad ? showPecentLoad.innerText = `${progress}%` : null;
+                showLineLoad ? showLineLoad.style.width = `${progress}%` : null;
+              }
+              showPecentLoad ? setValueProgress(progress) : null;
+    
+              function imageLoaded() {
+                imagesLoadedCount++;
+                progress = Math.round((100 / preloaderImages.length) * imagesLoadedCount);
+                const intervalId = setInterval(() => {
+                  counter >= progress ? clearInterval(intervalId) : setValueProgress(++counter);
+                  counter >= 100 ? addLoadedClass() : null;
+                }, 10);
+              }
+    
+              function addLoadedClass() {
+                htmlDocument.classList.add('loaded');
+                htmlDocument.classList.remove('lock');
+                htmlDocument.classList.remove('loading');
+                setInterval(() => {
+                  preloader.remove();
+                  preloaderContainer.remove();
+                }, 500);
+              }
+            } else {
+              preloaderContainer.remove();
+            }
+          }
+          preloader();
+        </script>
+    </div>
+    
+    {% block end_page %}
+    {% endblock end_page %}
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

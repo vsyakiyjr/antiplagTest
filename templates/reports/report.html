@@ -1,0 +1,609 @@
+{% extends "base.html" %}
+{% block title %}AntiplagiatKZ{% endblock %}
+{% block content %}
+{% load static %}
+{% load user_filters %}
+	<section class="page__profile profile _watcher-view" data-watch="" data-watch-threshold="0.15">
+		<div class="profile__container">
+	
+	<div class="r-wrap">
+		<div class="r-sidebar">
+		
+		</div>
+		<div class="r-content">
+		
+		</div>
+	</div>
+	
+		</div>
+	</section>
+	<section class="report">
+		<div class="report__container">
+			<div class="report__wrapper">
+				<div class="report__colum" style="height:auto;">
+					   <div class="report__text">
+						<div class="text__title">
+							<h2>ОТЧЁТ</h2>
+							<h3>о наличии взаимствований:</h3>
+							<div class="text-info">
+								<p><span class="bold">Автор документа:</span> Советкалыкова Сымбат Саматкызы</p>
+								<p><span class="bold">Провервющий:</span> АИС "Platonus" ENU (Oigen ИT) (platonus@enu.kz/ ID: 22)</p>
+								<p><span class="bold">Организация:</span>  Евразийский национальный университет имени Л.Н.Гумилева</p>
+							</div>
+						</div>
+						<div class="text__subtitle">
+							<h4>Информация о документе:</h4>
+							<div class="subtitle__info">
+								<p><span class="bold">Название документа:</span> luchshiy_antiplagiat_KZ.pdf</p>
+								<p><span class="bold">Размер текста:</span> Empty </p>
+								<p><span class="bold">Символов в тексте:</span>{{ json.seo_check.count_chars_without_space }}</p>
+								<p><span class="bold">Слов в тексте:</span>{{ json.seo_check.count_words }}</p>
+								<p><span class="bold">Число предложений:</span> Empty </p>
+							</div>
+						</div>
+					   </div>
+					   <div class="report__diagram">
+						<div class="diagram">
+							<div class="diagram__item">
+								<div class="diagram__name">Процент уникальности {{ json.text_unique }}%</div>
+								<div class="pie animate no-round" style="--p:{{ json.text_unique }};--c:#A7DCF6;">  {{ json.text_unique }}%</div>
+							</div>
+							<div class="diagram__item">
+								<div class="diagram__name">Процент спама {{ json.seo_check.spam_percent }} % </div>
+								<div class="pie animate no-round" style="--p:{{ json.seo_check.spam_percent }};--c:#A7DCF6;"> {{ json.seo_check.spam_percent }}%</div>
+							</div>
+							<div class="diagram__item">
+								<div class="diagram__name">Процент воды  {{ json.seo_check.water_percent }} % </div>
+								<div class="pie animate no-round" style="--p:{{ json.seo_check.water_percent }};--c:#A7DCF6;"> {{ json.seo_check.water_percent }}%</div>
+							</div>
+						</div>
+						<div class="diagram__line">
+							<div class="line__item-1 line-item">
+								<div class="line-item__colum">Повтор пробела</div>
+								<div class="line-item__colum" id="twoSpace"></div>
+							</div>
+							<div class="line__item-2 line-item">
+								<div class="line-item__colum">Попытка скрыть символы</div>
+								<div class="line-item__colum">Empty</div>
+							</div>
+							<div class="line__item-3 line-item">
+								<div class="line-item__colum">Замена букв кириллицы или латиницы</div>
+								<div class="line-item__colum">Empty</div>
+							</div>
+							<div class="line__item-4 line-item">
+								<div class="line-item__colum">Потенциальная попытка использования формул</div>
+								<div class="line-item__colum">Empty</div>
+							</div>
+						</div>
+					</div>
+					
+					   <div class="block-chatgpt">
+					   </div>
+					   
+					<div class="report__gallery gallery">
+						<div class="gallery__wrapper">
+							<div class="gallery__tab">
+							 
+								<input type="radio" name="tab-btn" id="tab-btn-1" value="" checked>
+								<input type="radio" name="tab-btn" id="tab-btn-2" value="">
+								
+				<table> 
+					<tbody> 
+						<tr style="padding:0">
+							<td data-label="" class="tab-1" style="padding:0"> 
+								<label style="display:block;width:100%;height:100%;" for="tab-btn-1">Ссылки</label> 
+							</td>
+							<td data-label="" class="tab-2" style="padding:0">
+								<label style="display:block;width:100%;height:100%;" for="tab-btn-2">Комментарии</label> 
+							</td> 	
+						</tr> 
+					</tbody>
+				</table> 
+			
+									<div id="content-1">
+									  
+<div class="text_slider">
+	{% for url in json.result_json.urls %} 
+	{% if forloop.counter == 1 %}
+	<input data-left-id="{{ url.url }}" onclick="scrollRB(this)" type="radio" name="layer" checked>
+	{% else %} 
+	<input data-left-id="{{ url.url }}" onclick="scrollRB(this)" type="radio" name="layer">
+	{% endif %}  
+    <div class="layer">					
+	
+			<div class="table-wrap">
+				<table> 
+					<tbody> 
+						<tr>
+							<td data-label="">
+								<a name="url" target="_blank" href="{{ url.url }}">{{url.url|truncatechars:40|linebreaksbr}}</a>
+							</td>
+							<td data-label="Название">Процент подобия: {{url.plagiat}}%</td>  
+						</tr> 
+					</tbody>
+				</table>
+			</div>
+													
+		<p id="{{ url.url }}"></p> 
+	</div>
+	{% endfor %} 
+</div>
+ 
+									</div>
+									<div id="content-2">
+									
+				<table> 
+					<tbody> 
+						<tr style="padding:0">
+							<td data-label="" style="padding:0"> 
+								<form> 
+									<textarea>
+										
+									</textarea>
+								</form> 
+							</td>
+							<td data-label="" style="padding:0" id="comments-list"> 
+							
+							</td> 	
+						</tr> 
+					</tbody>
+				</table> 
+				
+									</div>
+ 
+								</div>
+							</div>
+					   </div>
+				</div>
+				<div class="report__colum" style="height:auto;">
+					<p id="doc_text"></p>
+				</div>
+
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/he/1.2.0/he.js"></script>
+				<script>
+					var docText = "{{ json.result_json.doc_text }}";
+					var fieldText = document.getElementById('doc_text');
+					var fieldTwoSpace = document.getElementById('twoSpace');
+					var words = docText.split(" ");
+					
+					var jsonString = he.decode("{{ json.result_json.urls }}");
+					jsonString = jsonString.replaceAll("'", '"');
+					var jsonUrls = JSON.parse(jsonString);
+					
+					var idPlagiatWords = [];
+					var stolenParagraphs = {};
+					var linksAndParagraphs = {};
+					
+					for (let i = 0; i < jsonUrls.length; i++) {
+					  var wordsList = jsonUrls[i]['words'].split(" ");
+					  var url = jsonUrls[i]['url'];
+					  var paragraph = jsonUrls[i]['paragraph'];
+					
+					  for (let j = 0; j < wordsList.length; j++) {
+						var wordIndex = parseInt(wordsList[j]);
+						idPlagiatWords.push({ index: wordIndex, url: url, paragraph: paragraph });
+					  }
+					
+					  stolenParagraphs[url] = [];
+					}
+				  
+					var setColorForPlagiat = '<span style="color: red;"><a href="#id_paragraph_';
+					var closeColorForPlagiat = '</a></span>';
+					var lastWordIsPlagiat = false;
+					var twoSpace = 0;
+					var stolenIndex = 0;
+					
+					for (let i = 0; i < words.length; i++) {
+					  var word = words[i];
+
+					  if (word === "") {
+						twoSpace += 1;
+						continue;
+					  }
+					  if (word === 'NewParagraph') {
+						  words[i] = '<br id=paragraph_'+ stolenIndex + '>';
+						  stolenIndex += 1;
+						continue;
+					  }
+					  var wordIndex = i;
+					  var wordUrl = null;
+					
+					  for (let j = 0; j < idPlagiatWords.length; j++) {
+						if (idPlagiatWords[j].index === wordIndex) {
+						  wordUrl = idPlagiatWords[j].url;
+						  break;
+						}
+					  }
+					  
+					  if (wordUrl) {
+						  if (!lastWordIsPlagiat) { 
+						  words[i] = setColorForPlagiat + word + '" data-id="' + wordUrl + '" onclick="window.location.href=\'' + wordUrl + '\'">' + word;
+							lastWordIsPlagiat = true;
+						  continue;
+						}				
+						words[i] = word;
+						lastWordIsPlagiat = true;
+					  } else if (lastWordIsPlagiat) {
+						words[i] = closeColorForPlagiat + word;
+						lastWordIsPlagiat = false;
+					  }
+					} 
+					var wordsForJson = docText.split(" ");
+					jsonUrls.forEach(url => {
+						var indexWords = url.words.split(" ")
+						var stolenIndex = 0
+						var url = url.url 
+						for (let index = 0; index < wordsForJson.length; index++) {
+							var word = wordsForJson[index];
+							if (word === ""){
+								continue;
+							}
+							if (word === 'NewParagraph') {
+								stolenIndex += 1;
+								continue;
+							}
+							if (indexWords.includes(index.toString())) {
+							 
+								if (url === 'https://www.researchgate.net/figure/OReilly-Tushman-Innovation-Continuum-2004_fig1_325657905') {
+									console.log('stolenParagraphs') 
+									console.log(word) 
+								}
+							
+								if (stolenParagraphs[url][stolenIndex] === undefined){
+									stolenParagraphs[url][stolenIndex] = word
+								}else {
+									stolenParagraphs[url][stolenIndex] += " " + word
+								}
+							}						
+						}
+					});
+					
+					fieldText.innerHTML = words.join(" ");
+					fieldTwoSpace.innerHTML = twoSpace;
+					//console.log(stolenParagraphs)
+
+					urls = document.getElementsByName('url')
+					urls.forEach(url => { 
+						currentUrl = url.href
+						
+						console.log(currentUrl) 
+									
+						stolenParagraphs[currentUrl].forEach(stolens => {
+							document.getElementById(currentUrl).innerHTML += stolens + '<br><br>'
+						});
+					});
+				</script>
+				  
+	<script>
+	var content1 = document.getElementById('content-1');
+	var list=content1.querySelectorAll('.content__row'); 
+	var toggleContentClassElements=function(className,list,elem,scroll)
+		{
+			this.toggleClassElements(className,list,elem);
+			/*
+			if(scroll&&elem.length){
+				var htmlBody=$('html, body');
+				var dy=$('header').height()+7;
+				var dySidebar=$('.r-show-sidebar .r-sidebar-wrap').height()||0;
+				var v=Math.max(dy,dy+elem.position().top-Math.max((htmlBody.height()-dy-dySidebar)/2,elem.height())+elem.height());
+				htmlBody.animate({scrollTop:v},200);
+			}
+			*/
+		};
+	var toggleClassElements=function(className,list,elem)
+		{
+			list.forEach((item) => {
+				item.classList.remove(className); 
+			}); 
+			elem.classList.add(className);
+		};
+		
+	//toggleContentClassElements("show", list, list[0]);
+	
+	
+	/* 
+	function logSelection(event) {
+		const log = document.getElementById("log");
+		const selection = event.target.value.substring(
+			event.target.selectionStart,
+			event.target.selectionEnd
+		);
+		log.textContent = `You selected: ${selection}`;
+	}
+ 
+	//const input = document.querySelector("input");
+	const input = document.getElementById('doc_text');
+	input.addEventListener("select", logSelection);
+	/**/
+	/**/
+function get_text() {
+  // Объявление переменной.
+  var text;
+
+  if (window.getSelection) {
+    // Современный способ.
+    range = window.getSelection();
+    text = range.toString();
+  } else if (document.getSelection) {
+    // Старый способ.
+    text = document.getSelection();
+  } else if (document.selection) {
+    // IE.
+    text = document.selection.createRange().text;
+  }
+
+  // Вывод результата, если получен выделенный текст.
+  if (text) {
+    //console.log(text);
+	 
+        if (range.rangeCount > 0) { 
+            var rect = range.getRangeAt(0).getBoundingClientRect();
+            x = rect.left;
+            y = rect.top;
+			
+			y += 50;
+			
+		var checkbox = document.getElementById('tab-btn-2');
+		
+		checkbox.checked = true;
+		
+			var doc_text = document.getElementById('doc_text');
+			var comments = document.getElementById('comments');
+			var elem = document.createElement("div");
+			
+			if (comments) {
+			comments.remove();
+			}
+			
+			my_form=document.createElement('FORM');
+			my_form.name='myForm';
+			my_form.method='POST';
+			my_form.action=''; 
+			my_form.addEventListener("submit", submitForm);
+
+			my_textarea=document.createElement('TEXTAREA'); 
+			my_button=document.createElement('BUTTON'); 
+			
+			my_button.textContent = "сохранить"; 
+			my_form.appendChild(my_textarea);
+			my_form.appendChild(my_button);
+			elem.appendChild(my_form);
+			
+			elem.setAttribute("id", "comments");
+			elem.classList.add('comments');
+			elem.style.top = y + "px";
+			elem.style.left = x + "px";
+ 
+			doc_text.appendChild(elem);
+			console.log(text);
+        }
+	
+  }
+}
+
+    function submitForm(event){
+        event.preventDefault();
+
+		//saveComments();
+		 
+		var checkbox = document.getElementById('tab-btn-2');
+		
+		checkbox.checked = true;
+		
+		var commlist = document.getElementById('comments-list');
+		var commentForm = document.getElementById('comments');
+		var comment = commentForm.querySelector('textarea').value;
+		
+		var textnode = document.createTextNode(comment);
+
+		//commlist.appendChild("<div>" + comment + "</div>");
+		
+		
+		var node = document.createElement("div");
+		 
+node.appendChild(textnode); 
+
+
+		commlist.appendChild(node);
+		
+		
+			if (commentForm) {
+			commentForm.remove();
+			}
+    }
+	
+// Применять эту функцию к тегам, содержащим текстовую информацию.
+var p_arr = document.getElementsByTagName("p");
+var doc_text = document.getElementById('doc_text');
+
+	doc_text.onmouseup = get_text;
+
+	/* 
+for (var i = 0; i < p_arr.length; i++) {
+  p_arr[i].onmouseup = get_text;
+}
+	/**/
+	
+	
+	function saveComments() {
+		window.sessionStorage.setItem('name', 'Дока Дог')		
+	}
+	
+	function scrollRB(_this) { 
+	
+		//сессия
+		const name = window.sessionStorage.getItem('name')
+		console.log(name)
+
+		var leftId = _this.dataset.leftId;  
+		
+		console.log(leftId);
+		
+		var rightText = document.querySelector('[data-id="' + leftId + '"]'); 
+		var rightTextArr = document.querySelectorAll('[data-id="' + leftId + '"]'); 
+		var rightTextArr2 = document.querySelectorAll('[data-id]'); 
+		var top = rightText.offsetTop;
+   
+		console.log(rightText);
+		
+		//document.documentElement.scrollTop = top;
+		window.scrollTo({top: top, behavior: 'smooth'});
+		  
+			rightTextArr2.forEach((item) => {
+				item.classList.remove('selected'); 
+			}); 
+			
+			rightTextArr.forEach((item) => {
+				item.classList.add('selected'); 
+			}); 
+			
+		/*  
+	// создание выделения
+	var range = document.createRange();
+	range.selectNode(rightText);
+	 
+    // удаление текущего выделения на странице
+    window.getSelection().removeAllRanges();
+    
+    // выделение объекта
+    window.getSelection().addRange(range);
+		*/ 
+	}
+	</script>
+	
+	
+	 
+		   </div>
+		</div>
+	</section>
+	{% endblock content %}
+  
+  {% block end_page %}
+  
+	  <style>
+ 
+.text_slider {
+  --layer-height: 250px;
+  --layer-width: 100%;
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--layer-height);
+  font: 100 16px 'Segoe UI', sans-serif;
+}
+
+.layer {
+  width: var(--layer-width);
+  height: var(--layer-height);
+  top: calc(var(--layer-height) * -1);
+
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  /*pointer-events: none;*/
+  transform: translateY(-25%);
+  transition: 0.5s;
+  
+    overflow: hidden;
+  display: none;
+}
+
+.layer td { 
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+ 
+.layer p { 
+    padding: 0 30px;
+	color: red;
+}
+ 
+.text_slider input {
+  cursor: pointer;
+    margin: 25px 5px;
+}
+
+.text_slider input:checked + .layer {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+	  </style>
+ 
+	  <style>
+	  	.r-wrap .r-sidebar {
+	  		width: 50%;
+	  		float: left;
+	  	}
+	  	.r-wrap .r-content {
+	  		width: 50%;
+	  		float: right;
+	  	}
+		
+		.table-wrap {
+			text-align: center;
+			display: inline-block;
+			background-color: #fff;
+			padding: 2rem 2rem;
+			color: #000;
+			width: 100%;
+		}
+			table {
+			border: 1px solid #ccc;
+			width: 100%;
+			margin:0;
+			padding:0;
+			border-collapse: collapse;
+			border-spacing: 0;
+			}
+			table tr {
+			border: 1px solid #ddd;
+			padding: 5px;
+			}
+			table th, table td {
+			padding: 10px;
+			text-align: center;
+			border-right: 1px solid #ddd;
+			}
+			table th {
+			color: #fff;
+			background-color: #444;
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 1px;
+			}
+		@media screen and (max-width: 600px) {
+			table {
+			border: 0;
+			}
+			table thead {
+			display: none;
+			}
+			table tr {
+			margin-bottom: 10px;
+			display: block;
+			border-bottom: 2px solid #ddd;
+			}
+			table td {
+			display: block;
+			text-align: right;
+			font-size: 13px;
+			border-bottom: 1px dotted #ccc;
+			border-right: 1px solid transparent;
+			}
+			table td:last-child {
+			border-bottom: 0;
+			}
+			table td:before {
+			content: attr(data-label);
+			float: left;
+			text-transform: uppercase;
+			font-weight: bold;
+			}
+		}
+		</style>  
+  {% endblock end_page %}
+    

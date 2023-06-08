@@ -1,0 +1,92 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+
+{% block header %}
+<header class="header" data-lp>
+  <div class="header__top">
+    <div class="header__container">
+      <div class="header__top-info">
+        <a href="/reports/" class="header__logo"><picture><source srcset="{% static 'img/logo.webp' %}" type="image/webp"><img src="{% static 'img/logo.png' %}" alt="logo"></picture></a>
+        <div class="header__links" style="display:none;">
+          <a href="#" class="header__link active">Частным пользователям</a>
+          <a href="#" class="header__link">Корпоративным клиентам</a>
+        </div>
+        <button type="button" class="menu__icon icon-menu"><span></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="header__inner" style="display:none;">
+    <div class="header__container">
+      <div class="header__body">
+        <div class="header__menu menu">
+          <nav class="menu__body">
+            <ul class="menu__list">
+              <li class="menu__item"><a href="#" class="menu__link">О компании</a></li>
+              <li class="menu__item"><a href="#" class="menu__link">Антиплагиат</a></li>
+              <li class="menu__item">
+                <a href="#" class="menu__link">Пакеты услуг</a>
+                <svg class="menu__arrow" width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L8 8L15 1" fill="white" />
+                  <path d="M1 1L8 8L15 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <ul class="submenu__list">
+                  <li class="submenu__item"><a href="#" class="submenu__link">Пакет Light</a></li>
+                  <li class="submenu__item"><a href="#" class="submenu__link">Пакет Standart</a></li>
+                  <li class="submenu__item"><a href="#" class="submenu__link">Пакет Chat GPT</a></li>
+                  <li class="submenu__item"><a href="#" class="submenu__link">Пакет Grand</a></li>
+                </ul>
+              </li>
+              <li class="menu__item"><a href="#" class="menu__link">Новости</a></li>
+              <li class="menu__item"><a href="#" class="menu__link">Поддержка</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="header__actions">
+          {% if user.is_authenticated %}
+            <a href="#" class="header__action person-action">
+              <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 20V17.8889C18 16.7691 17.5522 15.6952 16.7552 14.9033C15.9582 14.1115 14.8772 13.6667 13.75 13.6667H5.25C4.12283 13.6667 3.04183 14.1115 2.2448 14.9033C1.44777 15.6952 1 16.7691 1 17.8889V20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M9.49988 9.44444C11.8471 9.44444 13.7499 7.55409 13.7499 5.22222C13.7499 2.89035 11.8471 1 9.49988 1C7.15267 1 5.24988 2.89035 5.24988 5.22222C5.24988 7.55409 7.15267 9.44444 9.49988 9.44444Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Личный кабинет
+            </a>
+          {% else %}
+              <a href="{% url 'users:login' %}" class="header__action person-action">Войти</a>/
+              <a href="{% url 'users:signup' %}" class="header__action person-action">Регистрация</a>
+          {% endif %}
+            
+          <div class="header__action languages">
+            <span>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 19C14.9706 19 19 14.9706 19 10C19 5.02944 14.9706 1 10 1C5.02944 1 1 5.02944 1 10C1 14.9706 5.02944 19 10 19Z" fill="white" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M10 1C12.2512 3.46452 13.5305 6.66283 13.6 10C13.5305 13.3372 12.2512 16.5355 10 19C7.74887 16.5355 6.46955 13.3372 6.40002 10C6.46955 6.66283 7.74887 3.46452 10 1Z" fill="white" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M1 10.0001H19" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Ru
+              <svg class="lang-arrow" width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L8 8L15 1" fill="white" />
+                <path d="M1 1L8 8L15 1" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <ul class="languages__list">
+              <li class="languages__item">
+                <a href="#" class="languages__link">Kazakh</a>
+              </li>
+              <li class="languages__item">
+                <a href="#" class="languages__link">English</a>
+              </li>
+              <li class="languages__item">
+                <a href="#" class="languages__link">Russian</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+{% endblock header %}

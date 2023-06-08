@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Отечественная система Антиплагиата{% endblock %}
+{% block content %}
+{% load user_filters %}
+
+<head>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+
+  <table>
+    <thead>
+    <tr>
+    <th>Имя файла</th>
+    <th>Загружен</th>
+    <th>Старый отчет</th>
+    <th>ID</th>
+    <th>Скачать работу</th>
+    <th>Скачать отчет</th>
+    <th>Открыть отчет</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for file in file_list %}
+    <tr>
+    <td>{{ file.name }}</td>
+    <td>{{ file.date_str }}</td>
+    <td>
+      <form method="POST" action="{% url 'reports:download_file' file.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="report_id" value="{{ file.id }}">
+        <button type="submit">Старая кнопка</button>
+        <input type="hidden" name="file_type" value="file">
+      </form>
+    </td>
+    <td>{{ file.id }}</td>
+    <td>
+      <form method="POST" action="{% url 'reports:download_file' file.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="report_id" value="{{ file.id }}">
+        <input type="hidden" name="file_type" value="original_doc">
+        <button type="submit">Скачать работу</button>
+      </form>
+    </td>
+    <td>
+      <form method="POST" action="{% url 'reports:download_file' file.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="report_id" value="{{ file.id }}">
+        <input type="hidden" name="file_type" value="report">
+        <button type="submit">Скачать отчет</button>
+      </form>
+    </td>
+    <td>
+      <form method="POST" action="{% url 'reports:open_report' file.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="report_id" value="{{ file.id }}">
+        <button type="submit">Открыть отчет</button>
+      </form>
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+   </table>
+
+</body>
+
+{% endblock %}

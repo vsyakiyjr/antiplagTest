@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Отечественная система Антиплагиата{% endblock %}
+
+{% block include_style  %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/old_design/styles.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock include_style  %}
+
+{% block content %}
+{% load user_filters %}
+</br>
+</br>
+<div style="margin: auto;" id="loader" class="hidden"></div>
+<div id="drop-area">
+  <form method="POST" id="myForm" enctype="multipart/form-data" class="my-form">
+    {% csrf_token %}
+    <input type="file" name="avoid_file" id="avoid_file_input" onchange="validateInput()" />
+    <label class="button" for="avoid_file_input"> Загрузите файл </label>
+    <button type="submit" id="submit_button" class="hidden button" disabled>Отправить на проверку</button>
+  </form>
+</div>
+
+<style>
+#loader {
+  border: 12px solid #f3f3f3;
+  border-top: 12px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.my-form {
+  margin-bottom: 10px;
+}
+
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 480px;
+  font-family: sans-serif;
+  margin: 100px auto;
+  padding: 20px;
+}
+
+#drop-area.highlight {
+  border-color: purple;
+  background-color: rgb(154, 185, 236);
+}
+
+#avoid_file_input {
+  display: none;
+}
+</style>
+
+<script>
+function validateInput() {
+  var fileInput = document.getElementById("avoid_file_input");
+  var submitButton = document.getElementById("submit_button");
+  
+  if (fileInput.value) {
+    submitButton.disabled = false;
+    submitButton.classList.remove("hidden");
+  } else {
+    submitButton.disabled = true;
+    submitButton.classList.add("hidden");
+  }
+}
+let dropArea = document.getElementById('drop-area');
+
+//  prevent default behavior
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, preventDefaults, false)
+})
+
+function preventDefaults (e) {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, highlight, false)
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, unhighlight, false)
+})
+
+function highlight(e) {
+  dropArea.classList.add('highlight')
+}
+
+function unhighlight(e) {
+  dropArea.classList.remove('highlight')
+}
+
+dropArea.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+  let dt = e.dataTransfer
+  let files = dt.files
+  let fileinput = document.getElementById("avoid_file_input");
+  fileinput.files = files;
+  fileinput.dispatchEvent(new Event('change'));
+}
+
+const form = document.getElementById('myForm')
+const loader = document.getElementById('loader')
+form.addEventListener('submit', (event) => {
+    loader.classList.remove('hidden'); // Show the loader
+})
+</script>
+{% endblock %}

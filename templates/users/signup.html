@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Antiplagiat KZ: Регистрация{% endblock %}
+{% load static %}
+{% block content %}
+<section class="page__register register" data-watch data-watch-threshold="0.15">
+  <div class="register__container">
+    <div class="register__inner">
+      <div class="register__info info-register">
+        <div class="info-register__img"><picture><source srcset="{% static 'img/register-img.webp' %}" type="image/webp"><img src="{% static 'img/register-img.png' %}" alt="register-img"></picture></div>
+        <div class="info-register__block">
+          <h1 class="info-register__title">Личный кабинет</h1>
+          <div class="info-register__text">Создайте новый аккаунт для работы с Антиплагиатом!</div>
+        </div>
+      </div>
+      <div class="register__body body-register">
+        <h2 class="body-register__title">Регистрация</h2>
+        {% if form.errors %}
+        {% for field in form %} 
+        {% for error in field.errors %}            
+        <div class="alert alert-danger">
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+              {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ error|escape }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+            <form method="post" action="{% url 'users:signup' %}" class="body-register__form">
+              {% csrf_token %}
+          
+              {% for field in form %}
+                {{ field }}
+              {% endfor %}
+              
+              <div class="body-register__checkbox checkbox">
+                <input id="c_1" data-error="Помилка" class="checkbox__input" type="checkbox" value="1" name="form[]">
+                <label for="c_1" class="checkbox__label"><span class="checkbox__text">Я принимаю условия <a href="#">пользовательского соглашения</a></span></label>
+              </div>
+              <button type="submit" class="body-register__btn">Готово</button>
+            </form>
+            <a href="#" class="body-register__link">Назад</a>
+          </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+<!-- <div class="row justify-content-center">
+  <div class="col-md-8 p-5">
+    <div class="card">
+      <div class="card-header">Зарегистрироваться</div>
+        <div class="card-body">
+        {% load user_filters %} {# Загружаем фильтры #}
+            {% if form.errors %}
+                {% for field in form %} 
+                  {% for error in field.errors %}            
+                    <div class="alert alert-danger">
+                      {{ error|escape }}
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    {{ error|escape }}
+                  </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" action="{% url 'users:signup' %}">
+            {% csrf_token %}
+
+            {# Выводим поля в цикле, по отдельности #}
+            {% for field in form %} 
+              <div class="form-group row my-3">
+                <label for="{{ field.id_for_label }}">
+                  {% if field.label == "First name" %} Имя{% endif %}
+                  {% if field.label == "Last name" %} Фамилия{% endif %}
+                  {% if field.label == "Username" %} Имя пользователя{% endif %}
+                  {% if field.label == "Email address" %} Email адрес{% endif %}
+                  {% if field.label == "Password" %} Пароль {% endif %}
+                  {% if field.label == "Password confirmation" %} Повторите пароль {% endif %}
+                  {% if field.label != "First name" and field.label != "Last name" and field.label != "Username" and field.label != "Email address" and field.label != "Password" and field.label != "Password confirmation" %} {{ field.label }}{% endif %}
+                  {% if field.field.required %}
+                    <span class="required text-danger">*</span>
+                  {% endif %}
+                </label>
+                {# К полю ввода добавляем атрибут class #}
+                {{ field|addclass:'form-control' }}
+                  {% if field.help_text == "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only." %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">Обязательное поле. Максимум 150 символов. Допустимы буквы, цифры и символы: @/./+/-/_.</small>
+                  {% elif field.label == "Password" %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">
+                      &emsp;&emsp;• Ваш пароль не может быть слишком похож на вашу личную информацию.<br>
+                      &emsp;&emsp;• Пароль должен содержать не менее 8 символов.<br>
+                      &emsp;&emsp;• Пароль не может быть распространенным или слишком простым.<br>
+                      &emsp;&emsp;• Пароль не может состоять только из цифр.<br>
+
+                    </small>
+                  {% elif field.help_text == "Enter the same password as before, for verification." %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">Повторите пароль для проверки.</small>
+                  {% else %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                  {% endif %}
+              </div>
+            {% endfor %}
+            <div class="col-md-6 offset-md-4">
+              <button type="submit" class="btn btn-primary">
+                Зарегистрироваться
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div> -->

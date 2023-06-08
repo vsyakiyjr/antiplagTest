@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}
+	AntiplagiatKZ
+{% endblock %}
+
+{% block content %}
+	{% load user_filters %}
+	{% load static %}
+	<section class="page__profile profile" data-watch data-watch-threshold="0.15">
+		<div class="profile__container">
+			<div class="profile__inner">
+				<aside class="profile__aside aside-profile">
+					<ul class="aside-profile__breadcrumbs breadcrumbs">
+						<li class="breadcrumbs__item"><a href="#" class="breadcrumbs__link">Главная</a></li>
+						<li class="breadcrumbs__item active">Личный кабинет</li>
+					</ul>
+					<div class="aside-profile__author">
+						<div class="aside-profile__img"><picture><source srcset="{% static 'img/author-img.webp' %}" type="image/webp"><img src="{% static 'img/author-img.jpg' %}" alt="author"></picture></div>
+						<div class="aside-profile__name">{{file_list.0.user.username}}</div>
+						<div class="aside-profile__mail">{{file_list.0.user.email}}</div>
+					</div>
+					<ul class="aside-profile__list">
+						<li class="aside-profile__item active">
+							<a href="#" class="aside-profile__link">
+								<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M17.5 32.0833C25.5541 32.0833 32.0833 25.5542 32.0833 17.5C32.0833 9.44585 25.5541 2.91667 17.5 2.91667C9.44581 2.91667 2.91663 9.44585 2.91663 17.5C2.91663 25.5542 9.44581 32.0833 17.5 32.0833Z" stroke="#161616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									<path d="M23.6833 11.3167L20.5917 20.5917L11.3167 23.6833L14.4083 14.4083L23.6833 11.3167Z" stroke="#161616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+								Мой план
+							</a>
+							<svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M1 20L11 10.5L1 1" fill="white" />
+								<path d="M1 20L11 10.5L1 1" stroke="#161616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</li>
+						<li class="aside-profile__item"><a href="#" class="aside-profile__link">
+								<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M29.1667 30.625V27.7083C29.1667 26.1612 28.5521 24.6775 27.4582 23.5835C26.3642 22.4896 24.8805 21.875 23.3334 21.875H11.6667C10.1196 21.875 8.63588 22.4896 7.54192 23.5835C6.44796 24.6775 5.83337 26.1612 5.83337 27.7083V30.625" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									<path d="M17.5 16.0417C20.7216 16.0417 23.3333 13.43 23.3333 10.2083C23.3333 6.98667 20.7216 4.375 17.5 4.375C14.2783 4.375 11.6666 6.98667 11.6666 10.2083C11.6666 13.43 14.2783 16.0417 17.5 16.0417Z" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+								Настройки профиля
+							</a></li>
+						<li class="aside-profile__item"><a href="#" class="aside-profile__link">
+								<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M2.91663 4.375H11.6666C13.2137 4.375 14.6975 4.98958 15.7914 6.08354C16.8854 7.17751 17.5 8.66124 17.5 10.2083V30.625C17.5 29.4647 17.039 28.3519 16.2186 27.5314C15.3981 26.7109 14.2853 26.25 13.125 26.25H2.91663V4.375Z" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									<path d="M32.0833 4.375H23.3333C21.7862 4.375 20.3025 4.98958 19.2085 6.08354C18.1146 7.17751 17.5 8.66124 17.5 10.2083V30.625C17.5 29.4647 17.9609 28.3519 18.7814 27.5314C19.6019 26.7109 20.7147 26.25 21.875 26.25H32.0833V4.375Z" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+								История запросов
+							</a></li>
+						<li class="aside-profile__item"><a href="#" class="aside-profile__link">
+								<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M30.625 5.83333H4.37504C2.76421 5.83333 1.45837 7.13916 1.45837 8.74999V26.25C1.45837 27.8608 2.76421 29.1667 4.37504 29.1667H30.625C32.2359 29.1667 33.5417 27.8608 33.5417 26.25V8.74999C33.5417 7.13916 32.2359 5.83333 30.625 5.83333Z" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									<path d="M1.45837 14.5833H33.5417" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+								Способ оплаты
+							</a></li>
+					</ul>
+					<a href="#" class="aside-profile__exit">
+						<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M21.875 30.625H27.7083C28.4819 30.625 29.2237 30.3177 29.7707 29.7707C30.3177 29.2237 30.625 28.4819 30.625 27.7083V7.29167C30.625 6.51812 30.3177 5.77625 29.7707 5.22927C29.2237 4.68229 28.4819 4.375 27.7083 4.375H21.875" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							<path d="M11.6666 24.7917L4.37496 17.5L11.6666 10.2083" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							<path d="M4.375 17.5H21.875" stroke="#5C5C5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+						Выйти из аккаунта
+					</a>
+				</aside>
+				<div class="profile__body body-profile">
+					<div id="drop-area" class="gradient-upload">
+						<form method="POST" id="myForm" enctype="multipart/form-data" class="my-form" action="{% url 'avoid:file_upload_avoid' %}">
+							{% csrf_token %}
+							<input type="file" name="avoid_file" id="avoid_file_input" onchange="validateInput()" />
+							<label class="button" for="avoid_file_input"> Загрузите файл </label>
+							<button type="submit" id="submit_button" class="hidden button" disabled>Отправить на проверку</button>
+						</form>
+					</div>
+					
+					<script>
+						function validateInput() {
+							var fileInput = document.getElementById("avoid_file_input");
+							var submitButton = document.getElementById("submit_button");
+							
+							if (fileInput.value) {
+								submitButton.disabled = false;
+								submitButton.classList.remove("hidden");
+							} else {
+								submitButton.disabled = true;
+								submitButton.classList.add("hidden");
+							}
+						}
+					
+						let dropArea = document.getElementById('drop-area');
+					
+						//  prevent default behavior
+						['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+							dropArea.addEventListener(eventName, preventDefaults, false)
+						})
+					
+						function preventDefaults (e) {
+							e.preventDefault()
+							e.stopPropagation()
+						}
+					
+						['dragenter', 'dragover'].forEach(eventName => {
+							dropArea.addEventListener(eventName, highlight, false)
+						});
+					
+						['dragleave', 'drop'].forEach(eventName => {
+							dropArea.addEventListener(eventName, unhighlight, false)
+						})
+					
+						function highlight(e) {
+							dropArea.classList.add('highlight')
+						}
+					
+						function unhighlight(e) {
+							dropArea.classList.remove('highlight')
+						}
+					
+						dropArea.addEventListener('drop', handleDrop, false);
+					
+						function handleDrop(e) {
+							let dt = e.dataTransfer
+							let files = dt.files
+							let fileinput = document.getElementById("avoid_file_input");
+							fileinput.files = files;
+							fileinput.dispatchEvent(new Event('change'));
+						}
+					</script>
+					
+
+					<style>	
+					.gradient-upload {		 
+						width: 100%;
+						height: 196px;
+						height: 196px;  
+						background: linear-gradient(90deg, #0093FD 0%, #7CE0FF 100%);
+					}
+					.body-profile {
+						padding-top: 4.25rem;
+					}
+					</style>					
+
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+								<th>#</th>
+								<th>Название</th>
+								<!-- <th>Проверяющий</th>
+								<th>Роль</th> -->
+
+								<th>Дата</th>
+								<th>Отчет</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+                				{% for file in file_list %}
+                				  <tr>
+                				    <td data-label="#">{{ forloop.counter }}</td>
+                				    <td data-label="Название">{{ file.name }}</td>
+                				    <!-- <td data-label="Проверяющий">Empty</td>
+                				    <td data-label="Роль">Empty</td> -->
+                				    <td data-label="Дата">{{ file.date|date:"d.m.Y" }}</td>
+                				    <td>
+										<form method="POST" action="{% url 'reports:open_report' file.id %}">
+										  {% csrf_token %}
+										  <input type="hidden" name="report_id" value="{{ file.id }}">
+										  <button type="submit">Посмотреть</button>
+										</form>
+									</td>
+                				  </tr>
+                				{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<style>
+					
+					.table-wrap {
+						text-align: center;
+						display: inline-block;
+						background-color: #fff;
+						padding: 2rem 2rem;
+						color: #000;
+						width: 100%;
+					}
+
+						table {
+						border: 1px solid #ccc;
+						width: 100%;
+						margin:0;
+						padding:0;
+						border-collapse: collapse;
+						border-spacing: 0;
+						}
+					
+						table tr {
+						border: 1px solid #ddd;
+						padding: 5px;
+						}
+					
+						table th, table td {
+						padding: 10px;
+						text-align: center;
+						border-right: 1px solid #ddd;
+						}
+					
+						table th {
+						color: #fff;
+						background-color: #444;
+						text-transform: uppercase;
+						font-size: 14px;
+						letter-spacing: 1px;
+						}
+					
+					
+					@media screen and (max-width: 600px) {
+						table {
+						border: 0;
+						}
+						table thead {
+						display: none;
+						}
+						table tr {
+						margin-bottom: 10px;
+						display: block;
+						border-bottom: 2px solid #ddd;
+						}
+						table td {
+						display: block;
+						text-align: right;
+						font-size: 13px;
+						border-bottom: 1px dotted #ccc;
+						border-right: 1px solid transparent;
+						}
+						table td:last-child {
+						border-bottom: 0;
+						}
+						table td:before {
+						content: attr(data-label);
+						float: left;
+						text-transform: uppercase;
+						font-weight: bold;
+						}
+					}
+					</style>
+
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock content %}

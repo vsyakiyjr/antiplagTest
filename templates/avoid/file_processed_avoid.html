@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}Отечественная система Антиплагиата{% endblock %}
+{% load static %}
+
+{% block include_style  %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/old_design/styles.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock include_style  %}
+
+{% block content %}
+{% load user_filters %}
+
+<h1>{{first_result}}</h1>
+
+<table class="table table-bordered" style="width:100%">
+    <tr>
+      <th>Возможные ошибки</th>
+      <th style="text-align:center">Количество ошибок</th>
+    </tr>
+    {% for key, value in messages_count.items %}
+    <tr>
+      <td >{{ key }}</td>
+      <td style="text-align:center">{{ value }}</td>
+    </tr>
+    {% endfor %}
+    <!-- <tr>
+      <td> Уникальность текста </td>
+      <td style="text-align:right">{{ uniqueness }}</td>
+    </tr> -->
+</table>
+
+<div id="chart"></div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var percentage = JSON.parse('{{ percentage|safe }}');
+    var values = Object.values(percentage); // extract the values from the dictionary
+    var keys = Object.keys(percentage);
+
+
+    
+    trace1 = {
+        hole: 0.6,
+        type: 'pie',
+        labels: keys,
+        values: values,
+        showlegend: true
+    };
+    data = [trace1];
+    layout = {
+        title: '',
+        xaxis: {
+            title: 'Cylinder',
+            domain: [0.33, 0.67]
+        }
+    };
+    Plotly.plot('chart', {
+        data: data,
+        layout: layout
+    });
+
+
+</script>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  
+  <!-- <button onclick="goBack()">Back</button> -->
+  <div class="downloads">
+    <div id="firstStageHeading"> Подробнее об итогах первого этапа </div>
+    <form action="{% url 'avoid:download_file' %}" method="get">
+      {% csrf_token %}
+      <button type="submit">Скачать справку</button>
+    </form>
+    <a href="{% url 'avoid:download_report' %}"> <button> Скачать отчет </button> </a>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: space-between">
+  <div id="arrowDescriptor">
+    <p>Перейти ко второму этапу проверки</p>
+    <form id="plagiarismTableForm">
+      {% csrf_token %}
+      <table id="plagiarismTable" class="table table-striped invisible">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Источник</th>
+            <th scope="col">         </th>
+            <th scope="col">         </th>
+          </tr>
+      </table>
+      <button id="submit_button" type="submit" value="Исключить" class="invisible">Исключить</button>
+    </form>
+  </div>
+
+  <div style="display: inline-block; width: 100px; height: 50px;">
+    <div style="width: 50px; background-color: #2196F3;"></div>
+    <div style="width: 0; height: 0; border-top: 25px solid transparent; border-bottom: 25px solid transparent; border-left: 50px solid #2196F3;"></div>
+  </div>
+
+  <div class="downloads">
+      <div id="uniqueness" class="hidden"></div>
+      <a href="{% url 'avoid:plagiarism_uniqueness' %}" id="uniqueness_query" onclick="getUniqueness(event)"> <button> Проверить на уникальность </button> </a>
+      <div id="loader" class="hidden"></div>
+      <a href="{% url 'avoid:plagiarism_report' %}" class="hidden" id="plag_report_btn"> <button> Скачать отчет </button> </a>
+  </div>
+</div>
+</div>
+
+
+<style>
+  .downloads {
+    width: 300px;
+  }
+</style>
+
+
+
+<script>
+  let plagiarismTableForm = document.getElementById('plagiarismTableForm');
+  plagiarismTableForm.addEventListener('submit', plagiarismTableProcess)
+  let plagiarism_query_sent = false;
+  let uniqueness_block = document.getElementById('uniqueness');
+  let plag_report_btn = document.getElementById('plag_report_btn');
+  
+  function plagiarismTableProcess(event){
+    event.preventDefault();
+    uniqueness_block.classList.add('hidden');
+    start_spinner();
+    fetch('/avoid/plagiarism-excepturl/',{method:'POST', body : new FormData(plagiarismTableForm)})
+    .then((resp) => resp.json())
+    .then((obj_json) => {
+      stop_spinner();
+      let uniqueness = obj_json['uniqueness'];
+      if (uniqueness != null) {
+        uniqueness_block.innerHTML = `Уникальность текста: ${uniqueness}%`;
+        plag_report_btn.classList.remove('hidden');
+      } else if (obj_json['error'] != null){
+        uniqueness_block.innerHTML = obj_json['error'];
+      } else {
+        uniqueness_block.innerHTML = 'Уникальность текста: ошибка'
+      }
+      uniqueness_block.classList.remove('hidden');
+    })
+    .catch(reject_val => {
+      uniqueness_block.innerHTML = reject_val;
+    });
+  }
+
+  function getUniqueness(event){
+    event.preventDefault();
+    if (!plagiarism_query_sent) {
+      start_spinner();
+      fetch("/avoid/plagiarism-excepturl/", {
+        method: "POST",
+        body: new FormData(document.getElementById("plagiarismTableForm")),
+      })
+        .then((resp) => resp.json())
+        .then((obj_json) => {
+          stop_spinner();
+          let uniqueness = obj_json['uniqueness'];
+          if (uniqueness != null) {
+            uniqueness_block.innerHTML = `Уникальность текста: ${uniqueness}%`;
+            add_plagiarism_table(obj_json['urls']);
+            plag_report_btn.classList.remove('hidden');
+          } else if (obj_json['error'] != null){
+            uniqueness_block.innerHTML = obj_json['error'];
+          } else {
+            uniqueness_block.innerHTML = 'Уникальность текста: ошибка'
+          }
+        })
+        .catch(reject_val => {
+          uniqueness_block.innerHTML = reject_val;
+        });
+      plagiarism_query_sent = true;
+      uniqueness_block.classList.remove('hidden');
+    }
+  }
+  
+  function add_plagiarism_table(urls){
+    let table = document.getElementById('plagiarismTable');
+    let submit_button = document.getElementById('submit_button');
+    let checkboxValues = {}; // initialize an empty object to store checkbox values
+    let domains = new Set();
+    for (let i=0; i < urls.length ; i++){
+        let url = urls[i]['url'];
+        let domain = url.replace(/(^\w+:|^)\/\//, '').split('/')[0]; // extract domain from url
+
+        if (domains.has(domain)){
+          continue
+        }
+        domains.add(domain)
+        let row = table.insertRow();
+        let checkboxCell = row.insertCell(0);
+        row.insertCell(1).innerHTML = `<div id="scrollable-cell"><a href="${url}">${domain}</a></div>`;
+        row.insertCell(2).innerHTML = `<div id="scrollable-cell">         </div>`
+        row.insertCell(3).innerHTML = `<div id="scrollable-cell">         </div>`
+        let checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'url';
+        checkbox.value = url;
+        checkbox.onchange = function() { // add onchange event listener to store checkbox value
+            if (checkbox.checked) {
+                checkboxValues[url] = true;
+            } else {
+                delete checkboxValues[url];
+            }
+        };
+        checkboxCell.appendChild(checkbox);
+    }
+    table.classList.remove('invisible');
+    submit_button.classList.remove('invisible');
+  }
+
+  function start_spinner(){
+    document.getElementById('loader').classList.remove('hidden');
+    document.getElementById("uniqueness_query").classList.add("hidden");
+  }
+  
+  function stop_spinner(){
+    document.getElementById('loader').classList.add('hidden');
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var button1 = document.getElementById("button1");
+    if (button1) {
+      button1.addEventListener("click", goBack);
+    }
+  });
+  
+</script>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Antiplagiat KZ:Вход{% endblock %}
+
+
+{% load user_filters %}
+  <div class="row justify-content-center">
+    <div class="col-md-8 p-5">
+      <div class="card">
+        <div class="card-header">
+          Войти на сайт
+        </div>
+        <div class="card-body">
+          {% if form.errors %}
+              {% for field in form %}
+                {% for error in field.errors %}            
+                  <div class="alert alert-danger">
+                    {{ error|escape }}
+                  </div>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+          {% endif %}
+
+          <form method="post"
+            {% if action_url %}
+              action="{% url action_url %}"
+            {% endif %}
+          >
+          {% csrf_token %}
+
+          {% for field in form %}
+            <div class="form-group row my-3"
+              {% if field.field.required %} 
+                aria-required="true"
+              {% else %}
+                aria-required="false"
+              {% endif %}
+            >
+              {% if field.label == 'Username' %}
+                <label for="{{ field.id_for_label }}">Имя пользователя
+              {% elif field.label == 'Password' %}
+                <label for="{{ field.id_for_label }}">Пароль
+              {% else %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}
+              {% endif %}
+                  {% if field.field.required %}
+                    <span class="required text-danger">*</span>
+                  {% endif %}
+              </label>
+              <div>
+                {{ field|addclass:'form-control' }}
+                {% if field.help_text %}
+                  <small id="{{ field.id_for_label }}-help" class="form-text text-muted">
+                    {{ field.help_text|safe }}
+                  </small>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+          <div class="col-md-6 offset-md-4">
+            <button type="submit" class="btn btn-primary">
+              Войти
+            </button>
+            <!-- Тест на внимательность. Без переопределения шаблона этого адреса
+            не существует. Нужно что-то делать, иначе все упадет -->
+            <a href="" class="btn btn-link">
+              Забыли пароль?
+            </a>
+          </div>
+          </form>
+        </div> <!-- card body -->
+      </div> <!-- card -->
+    </div> <!-- col -->
+</div> <!-- row -->
+
+
+{% block content %}
+<section class="page__register register" data-watch data-watch-threshold="0.01">
+  <div class="register__container">
+    <div class="register__inner">
+      <div class="register__info info-register">
+        <div class="info-register__img"><picture><source srcset="{% static 'img/register-img.webp' %}" type="image/webp"><img src="{% static 'img/register-img.png' %}" alt="register-img"></picture></div>
+        <div class="info-register__block">
+          <h1 class="info-register__title">Личный кабинет</h1>
+          <div class="info-register__text">Создайте новый аккаунт для работы с Антиплагиатом!</div>
+        </div>
+      </div>
+      <div class="register__body body-register">
+        <h2 class="body-register__title">Вход</h2>
+        <form method="post"
+        {% if action_url %}
+          action="{% url action_url %}"
+        {% endif %} class="body-register__form">
+          {% csrf_token %}
+          {% for field in form %}
+              {{ field }}
+          {% endfor %}
+          <button type="submit" class="body-register__btn">Войти</button>
+        </form>
+        <a href="#" class="body-register__link">Регистрация</a>
+        <a href="#" class="body-register__link">Забыли пароль?</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
